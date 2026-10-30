@@ -1,0 +1,25 @@
+{
+  "name": "@tally/desktop",
+  "version": "1.0.0",
+  "description": "Standalone Portable Windows Electron Application for Tally Billing & Inventory System",
+  "main": "main.js",
+  "author": "Tally Solutions Team",
+  "license": "MIT",
+  "scripts": {
+    "desktop:dev": "cross-env NODE_ENV=development electron .",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "predist": "node prebuild.js",
+    "dist": "electron-builder --win"
+  },
+  "dependencies": {
+    "@tally/api": "*",
+    "@tally/database": "*",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "30.0.0",
+    "electron-builder": "24.13.3"
+  }
+}

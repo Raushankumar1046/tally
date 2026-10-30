@@ -1,0 +1,25 @@
+{
+  "name": "tally-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "packageManager": "npm@10.8.2",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "db:generate": "turbo run db:generate",
+    "db:push": "turbo run db:push",
+    "db:seed": "turbo run db:seed",
+    "desktop:dev": "npm run --prefix apps/desktop desktop:dev",
+    "desktop:build": "turbo run build && npx cross-env CSC_IDENTITY_AUTO_DISCOVERY=false npm run --prefix apps/desktop dist && turbo run db:generate"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "7zip-bin": "^5.2.0",
+    "turbo": "^2.0.0"
+  }
+}

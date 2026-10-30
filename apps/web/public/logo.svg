@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <defs>
+    <linearGradient id="gradRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#b91c1c" />
+    </linearGradient>
+    <linearGradient id="gradOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#c2410c" />
+    </linearGradient>
+    <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Logo Triangle Emblem -->
+  <g transform="translate(10, 10)">
+    <polygon points="50,5 95,85 5,85" fill="url(#gradRed)" stroke="#7f1d1d" stroke-width="2" />
+    <polygon points="50,25 75,70 25,70" fill="url(#gradOrange)" opacity="0.9" />
+    <polygon points="50,40 65,65 35,65" fill="url(#gradBlue)" />
+    
+    <!-- Emblem Text A T S -->
+    <text x="50" y="55" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#ffffff" text-anchor="middle">A</text>
+    <text x="35" y="78" font-family="Arial, sans-serif" font-weight="bold" font-size="12" fill="#ffffff" text-anchor="middle">T</text>
+    <text x="65" y="78" font-family="Arial, sans-serif" font-weight="bold" font-size="12" fill="#ffffff" text-anchor="middle">S</text>
+    
+    <text x="50" y="98" font-family="Arial, sans-serif" font-weight="bold" font-size="9" fill="#334155" text-anchor="middle" letter-spacing="1">Technologies</text>
+  </g>
+
+  <!-- Company Name Text -->
+  <g transform="translate(120, 45)">
+    <text x="0" y="15" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="28" fill="#0f172a" letter-spacing="0.5">ATS Technologies</text>
+    <text x="0" y="32" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="600" font-size="12" fill="#64748b" letter-spacing="1">ENTERPRISE BILLING &amp; IT SOLUTIONS</text>
+  </g>
+</svg>

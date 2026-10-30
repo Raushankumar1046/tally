@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite note: No @db.Decimal, no @db.Text — all removed
+// Enums are emulated by Prisma as string fields in SQLite
+
+model CompanySettings {
+  id                   String   @id @default(cuid())
+  companyName          String   @default("Tally Solutions Enterprise")
+  address              String?  @default("100 Tech Park Avenue, Silicon Valley")
+  phone                String?  @default("+91 80000 12345")
+  email                String?  @default("contact@tallysolutions.com")
+  gstin                String?  @default("27AABCT1234H1Z9")
+  panNumber            String?  @default("AVCPT7101L")
+  bankName             String?  @default("HDFC Bank")
+  accountNumber        String?  @default("50200012345678")
+  ifscCode             String?  @default("HDFC0001234")
+  branchName           String?  @default("Silicon Valley Branch")
+  upiId                String?  @default("tallysolutions@hdfcbank")
+  invoicePrefix        String   @default("26-27/")
+  nextInvoiceNumber    Int      @default(1)
+  invoiceNumberPadding Int      @default(3)
+  purchasePrefix       String   @default("PUR/26-27/")
+  nextPurchaseNumber   Int      @default(1)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model BankAccount {
+  id             String    @id @default(cuid())
+  accountName    String
+  accountType    String    @default("BANK")
+  accountNumber  String?
+  ifscCode       String?
+  branch         String?
+  openingBalance Decimal   @default(0.00)
+  currentBalance Decimal   @default(0.00)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  vouchers       Voucher[]
+}
+
+model Vendor {
+  id        String     @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  gstin     String?
+  address   String?
+  balance   Decimal    @default(0.00)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  purchases Purchase[]
+}
+
+model Item {
+  id            String         @id @default(cuid())
+  name          String
+  sku           String         @unique
+  category      String?
+  unit          String         @default("Pcs")
+  purchasePrice Decimal
+  sellingPrice  Decimal
+  taxRate       Decimal        @default(18.00)
+  minStockLevel Int            @default(5)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  stock         StockLedger?
+  purchaseItems PurchaseItem[]
+  invoiceItems  InvoiceItem[]
+}
+
+model StockLedger {
+  id              String   @id @default(cuid())
+  itemId          String   @unique
+  item            Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  currentQuantity Decimal  @default(0.00)
+  updatedAt       DateTime @updatedAt
+}
+
+model Purchase {
+  id            String         @id @default(cuid())
+  vendorId      String
+  vendor        Vendor         @relation(fields: [vendorId], references: [id])
+  invoiceNumber String
+  totalAmount   Decimal
+  purchaseDate  DateTime       @default(now())
+  createdAt     DateTime       @default(now())
+  items         PurchaseItem[]
+}
+
+model PurchaseItem {
+  id                String   @id @default(cuid())
+  purchaseId        String
+  purchase          Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  itemId            String
+  item              Item     @relation(fields: [itemId], references: [id])
+  quantity          Decimal
+  unitPurchasePrice Decimal
+  taxRate           Decimal  @default(18.00)
+  taxableAmount     Decimal  @default(0.00)
+  taxAmount         Decimal  @default(0.00)
+  totalPrice        Decimal
+}
+
+model Invoice {
+  id                 String        @id @default(cuid())
+  customerName       String?
+  customerPhone      String?
+  customerGstin      String?
+  customerAddress    String?
+  shippedAddress     String?
+  placeOfSupply      String?       @default("Haryana (06)")
+  poNumber           String?       @default("By MAIL")
+  poDate             DateTime?
+  paymentTerms       String?       @default("Against Delivery")
+  invoiceNumber      String        @unique
+  subtotal           Decimal
+  taxAmount          Decimal
+  totalAmount        Decimal
+  paymentMode        String        @default("CASH")
+  creditDays         Int?
+  dueDate            DateTime?
+  outstandingBalance Decimal?      @default(0.00)
+  createdAt          DateTime      @default(now())
+  items              InvoiceItem[]
+}
+
+model InvoiceItem {
+  id               String   @id @default(cuid())
+  invoiceId        String
+  invoice          Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  itemId           String
+  item             Item     @relation(fields: [itemId], references: [id])
+  quantity         Decimal
+  unitSellingPrice Decimal
+  taxRate          Decimal
+  totalPrice       Decimal
+}
+
+model JournalEntry {
+  id            String        @id @default(cuid())
+  voucherNumber String        @unique
+  entryDate     DateTime      @default(now())
+  description   String
+  totalAmount   Decimal
+  createdAt     DateTime      @default(now())
+  lines         JournalLine[]
+}
+
+model JournalLine {
+  id             String       @id @default(cuid())
+  journalEntryId String
+  journalEntry   JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  accountName    String
+  type           String
+  amount         Decimal
+}
+
+model Voucher {
+  id              String        @id @default(cuid())
+  voucherNumber   String        @unique
+  voucherType     String
+  date            DateTime      @default(now())
+  amount          Decimal
+  referenceNumber String?
+  narration       String?
+  vendorId        String?
+  bankAccountId   String?
+  bankAccount     BankAccount?  @relation(fields: [bankAccountId], references: [id])
+  createdAt       DateTime      @default(now())
+  lines           VoucherLine[]
+}
+
+model VoucherLine {
+  id           String  @id @default(cuid())
+  voucherId    String
+  voucher      Voucher @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+  ledgerType   String  @default("GENERAL")
+  ledgerId     String?
+  accountName  String
+  debitAmount  Decimal @default(0.00)
+  creditAmount Decimal @default(0.00)
+}
+
+model RecycleBin {
+  id          String   @id @default(cuid())
+  entityType  String   // INVOICE, PURCHASE, VENDOR, ITEM, VOUCHER
+  entityId    String
+  displayName String
+  details     String?
+  payload     String
+  deletedAt   DateTime @default(now())
+}
+

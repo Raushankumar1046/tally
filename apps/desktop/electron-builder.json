@@ -1,0 +1,54 @@
+{
+  "appId": "com.tally.billing.desktop",
+  "productName": "Tally Billing & Inventory Management",
+  "copyright": "Copyright © 2026 Tally Solutions Team",
+  "electronVersion": "30.0.0",
+  "directories": {
+    "output": "../../dist-desktop",
+    "buildResources": "build"
+  },
+  "files": [
+    "main.js",
+    "prebuild.js",
+    "package.json",
+    "template.db",
+    "web/out/**/*",
+    "node_modules/@tally/**/*",
+    "node_modules/@prisma/**/*",
+    "node_modules/.prisma/**/*",
+    "node_modules/dotenv/**/*",
+    "node_modules/express/**/*",
+    "node_modules/cors/**/*",
+    "node_modules/body-parser/**/*",
+    "node_modules/morgan/**/*"
+  ],
+  "asarUnpack": [
+    "node_modules/@prisma/client/generated-client/**/*.node",
+    "node_modules/.prisma/client/**/*.node",
+    "**/*.node"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Tally Billing Enterprise",
+    "uninstallDisplayName": "Tally Billing & Inventory Management (Uninstall)"
+  },
+  "portable": {
+    "artifactName": "Tally-Billing-System-Portable-${version}.exe"
+  }
+}
